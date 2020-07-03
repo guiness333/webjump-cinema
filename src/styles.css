@@ -27,6 +27,7 @@ header .menu-container,header .icons-container  {
   list-style: none;
   display: flex;
   font-weight: 100;
+  align-items: baseline;
 }
 
 header .menu-container li{
@@ -35,3 +36,4 @@ header .menu-container li{
 header .icons-container li{
   margin-left: 20px;
 }
+
