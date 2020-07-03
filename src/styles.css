@@ -29,6 +29,10 @@ header .menu-container,header .icons-container  {
   font-weight: 100;
   align-items: baseline;
 }
+a {
+  text-decoration: none;
+  color: #FFF;
+}
 
 header .menu-container li{
   margin-right: 20px;

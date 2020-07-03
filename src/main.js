@@ -17,10 +17,10 @@ class App {
       <div class='container'>
         <header>
           <ul class='menu-container'>
-            <li><img src=${logoImg} /></li>
-            <li>Filmes</li>
-            <li>Séries</li>
-            <li>Favoritos</li>
+            <li><a href="/"><img src=${logoImg} /></a></li>
+            <li><a href="#filmes">Filmes</a></li>
+            <li><a href="#series">Séries</a></li>
+            <li><a href="#favoritos">Favoritos</a></li>
           </ul>
           <ul class='icons-container'>
             <li><img src=${searchImg} /></li>
