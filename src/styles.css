@@ -6,9 +6,14 @@
   font-family: 'Roboto', sans-serif;
 }
 body {
-  background: #3F375E;
+  background: #252232;
   color: #FFF;
   font-size: 16px;
+}
+.banner {
+  width: 100%;
+  height: 318px;
+  background-color: #3F375E;
 }
 header {
   display: flex;

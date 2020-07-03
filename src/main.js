@@ -13,22 +13,24 @@ class App {
 
   render() {
     const app = /*html*/`
-
+    <div class="banner">
       <div class='container'>
-        <header>
-          <ul class='menu-container'>
-            <li><a href="/"><img src=${logoImg} /></a></li>
-            <li><a href="#filmes">Filmes</a></li>
-            <li><a href="#series">Séries</a></li>
-            <li><a href="#favoritos">Favoritos</a></li>
-          </ul>
-          <ul class='icons-container'>
-            <li><img src=${searchImg} /></li>
-            <li><img src=${notificationsImg} /></li>
-            <li><img src=${profileImg} /></li>
-          </ul>
-        </header>
-      </div>
+        
+          <header>
+            <ul class='menu-container'>
+              <li><a href="/"><img src=${logoImg} /></a></li>
+              <li><a href="#filmes">Filmes</a></li>
+              <li><a href="#series">Séries</a></li>
+              <li><a href="#favoritos">Favoritos</a></li>
+            </ul>
+            <ul class='icons-container'>
+              <li><img src=${searchImg} /></li>
+              <li><img src=${notificationsImg} /></li>
+              <li><img src=${profileImg} /></li>
+            </ul>
+          </header>
+        </div>
+     </div>
 
     `;
 
