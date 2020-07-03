@@ -3,4 +3,41 @@
   padding: 0;
   outline: 0;
   box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
 }
+body {
+  background: #3F375E;
+  color: #FFF;
+  font-size: 16px;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  height: 85px;
+  align-items: center;
+}
+.container {
+  width: 1000px;
+  margin: 0 auto;
+  padding: 8px;
+}
+
+header .menu-container,header .icons-container  {
+  list-style: none;
+  display: flex;
+  font-weight: 100;
+  align-items: baseline;
+}
+a {
+  text-decoration: none;
+  color: #FFF;
+}
+
+header .menu-container li{
+  margin-right: 20px;
+}
+header .icons-container li{
+  margin-left: 20px;
+}
+
