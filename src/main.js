@@ -9,7 +9,23 @@ class App {
 
   render() {
     const app = /*html*/`
-      <div>Cinema Webjump</div>
+
+      <div class='container'>
+        <header>
+          <ul class='menu-container'>
+            <li>LOGO</li>
+            <li>Filmes</li>
+            <li>Séries</li>
+            <li>Favoritos</li>
+          </ul>
+          <ul class='icons-container'>
+            <li>X</li>
+            <li>O</li>
+            <li>P</li>
+          </ul>
+        </header>
+      </div>
+
     `;
 
     return app;
