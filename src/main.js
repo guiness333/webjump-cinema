@@ -5,11 +5,10 @@ import logoImg from './assets/logo.svg';
 import searchImg from './assets/search.svg';
 import profileImg from './assets/profile.svg';
 import favoriteImg from './assets/favorite.svg';
-import favoreteActive from './assets/favorite-active.svg';
+import favoriteActive from './assets/favorite-active.svg';
 class App {
   constructor() {
-    this.popular = [];
-    this.favorites = [];
+    this.favoritos = [{}];
     this.movies = [
       {
         "popularity": 147.532,
@@ -173,49 +172,73 @@ class App {
     this.appElement = document.getElementById('app');
     this.appElement.innerHTML = this.render();
     this.eventListener();
-    this.render =this.render.bind(this);
+
+  }
+  fetchData() {
+    let html = '';
+    this.movies.forEach(filme => {
+      let { poster_path, backdrop_path, overview, title } = filme;
+      let favorito = false
+      if (this.favoritos.includes({ title: title })) {
+        favorito = true;
+      }
+      html += this.renderMovies(poster_path, favorito);
+    })
+    return html;
   }
 
 
 
+  renderMovies(poster_path, favorito) {
+    return /*html*/`
+          <span>
+          <img class="favorite"src=${favorito ? favoriteActive:favoriteImg} />
 
-  popularMovies() {
-    this.movies.forEach(
-      e => {
-        let pos = this.movies.indexOf(e);
-        this.popular.push(/*html*/`
-          <span key=${pos}>
-          <img class="favorite"src=${favoriteImg} />
-
-          <img class="poster" src="https://image.tmdb.org/t/p/w300/${e.poster_path}"/>
+          <img class="poster" src="https://image.tmdb.org/t/p/w300/${poster_path}"/>
           </span>
-          `)
-      })
+          `
   }
-  
+  renderFav() {
+    let img = []
+    this.favoritos.forEach(favorito => 
+      {
+        img.push(favorito.poster)
+      });
+    return img;
+  }
   eventListener() {
-    let fav = []
-    document.addEventListener("DOMContentLoaded", function(event) { 
-      document.querySelectorAll(".poster").forEach((e,i) => {
-        e.addEventListener("click", (e,i)=> {
-          fav.push(e.target.src);
-          this.favorites = fav;
+    document.addEventListener("DOMContentLoaded", function (event) {
+      let movies = document.querySelectorAll(".poster");
+      movies.forEach((filme, index) => {
+        filme.addEventListener("click", (e) => {
+          let filme = e.target.src;
+          console.log(filme);
+          let favElement = document.querySelector('.favorites > .movies');
+          favElement.innerHTML += /*html*/`
+                <span key=${index}>
+                  <img class="favorite"src=${favoriteActive} />
+                  <img class="poster" src="${filme}"/>
+                </span>`
+          let pop = document.querySelectorAll('.popular > .movies > span > img.favorite')[index];
+          pop.setAttribute('src', favoriteActive);
         });
       })
     });
     
+
+
   }
 
 
 
-render() {
+  render() {
 
-  this.popularMovies();
+    //this.popularMovies();
 
 
-  
 
-  const app = /*html*/`
+
+    const app = /*html*/`
     <div class="banner">
       <div class='container'>
         <header>
@@ -247,21 +270,21 @@ render() {
         <div class="popular">
           <h2>Populares</h2>
           <div class="movies">
-          ${this.popular.join('')}
+          ${this.fetchData()}
           </div>
         </div>
         <div class="favorites">
           <h2>Favoritos</h2>
-          <div class="movie">
-          ${this.favorites.join('')}
+          <div class="movies">
+          ${this.renderFav()}
           </div>
         </div>
      </div>
 
     `;
 
-  return app;
+    return app;
+  }
 }
-}
-
 const app = new App();
+
