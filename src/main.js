@@ -51,7 +51,7 @@ class App {
       }]
     this.appElement = document.getElementById('app');
     this.appElement.innerHTML = this.render();
-    this.eventListener();
+    this.eventListener(true);
 
   }
   fetchData() {
@@ -59,11 +59,14 @@ class App {
     this.movies.forEach(filme => {
       let { poster_path, backdrop_path, overview, title } = filme;
       let favorito = false
+      let res = []
       this.favoritos.forEach(filme => {
-        if (filme.poster + "".includes(poster_path) && filme.active) {
-          favorito = true;
-        }
+        res.push(filme.poster);
       })
+      let index = res.indexOf((`https://image.tmdb.org/t/p/w300/${poster_path}`));
+      if (res.indexOf((`https://image.tmdb.org/t/p/w300/${poster_path}`)) != -1 && this.favoritos[index].active) {
+        favorito = true;
+      }
       html += this.renderMovies(poster_path, favorito);
     })
     return html;
@@ -72,98 +75,83 @@ class App {
 
 
   renderMovies(poster_path, favorito) {
-    console.log(favorito);
     return /*html*/`
-          <span>
+          <span key=${poster_path}>
           <img class="favorite"src=${favorito ? favoriteActive : favoriteImg} />
 
           <img class="poster" src="https://image.tmdb.org/t/p/w300/${poster_path}"/>
           </span>
           `
   }
+  ready() {
+    document.addEventListener('readystatechange', (event) => {
+      if (document.readyState == 'complete') {
+        this.renderFav();
+      }
+    })
+  }
+
   renderFav() {
-    let img = []
+    let img = [];
+    console.log(this.favoritos);
     let fav = this.favoritos;
-    document.addEventListener("DOMContentLoaded", function (event) {
     let favElement = document.querySelector('.favorites > .movies');
     if (fav.length > 0) {
       fav.forEach(favorito => {
-        if(favorito.active){
+        if (favorito.active) {
           img.push(favorito.poster);
         }
       });
+      console.log(img);
       if (img.length > 0) {
-        console.log(img)
+
+        favElement.innerHTML = '';
         img.forEach(filme => {
-            favElement.innerHTML += /*html*/`
-            <span>
-              <img class="favorite"src=${favoriteActive} />
-              <img class="poster" src="${filme}"/>
-            </span>`
-        })}else{
-          console.log('oe')
-          favElement.innerHTML = /*html*/`
-          <h5 class='nenhum'>Nenhum filme adicionado aos favoritos</h5>`
-        }
-      
-    }else{
-      console.log('oe')
+          favElement.innerHTML += /*html*/`
+              <span key="${filme}">
+                <img class="favorite" src=${favoriteActive} />
+                <img class="poster" src="${filme}"}/>
+              </span>`
+          
+        })
+        
+
+      } else {
+        favElement.innerHTML = /*html*/`
+            <h5 class='nenhum'>Nenhum filme adicionado aos favoritos</h5>`
+      }
+
+    } else {
       favElement.innerHTML = /*html*/`
-      <h5 class='nenhum'>Nenhum filme adicionado aos favoritos</h5>`
+            <h5 class='nenhum'>Nenhum filme adicionado aos favoritos</h5>`
     }
-    })
-    
+    this.favoritos = fav;
+    this.saveToStorage();
   }
-  eventListener() {
+  onclick(filme) {
+    let posterFilme = filme.target.src.includes('.svg') ? filme.srcElement.nextElementSibling.currentSrc : filme.target.src;
+
     let favoritos = this.favoritos;
-    let active = false;
-    const save = () => this.saveToStorage();
-    const renderFavo = () => this.renderFav();
-    document.addEventListener("DOMContentLoaded", function (event) {
-      let movies = document.querySelectorAll(".poster");
-      movies.forEach((filme, index) => {
-        filme.addEventListener("click", (e) => {
-          let filme = e.target.src;
-          console.log(filme);
+    let aux = [];
+    favoritos.forEach(fav => {
+      aux.push(fav.poster);
+    })
+    if (!(aux.indexOf(posterFilme) != -1)) {
+      favoritos = [...favoritos, { active: true, poster: posterFilme }];
+    } else {
+      favoritos[aux.indexOf(posterFilme)] = { active: !favoritos[aux.indexOf(posterFilme)].active, poster: posterFilme };
+    }
+    this.favoritos = favoritos;
+    this.renderFav();
+  }
 
-          let favElement = document.querySelector('.favorites > .movies');
-          let pop = document.querySelectorAll('.popular > .movies > span > img.favorite')[index];
-          if (pop.getAttribute('src') === favoriteActive) {
-            let x = document.querySelector(`span[key="${filme}"]`);
-            if (x != null) {
-              pop.setAttribute('src', favoriteImg)
-              favoritos.forEach((fil, index) => {
-                if (fil.poster == filme) {
-                  favoritos[index] = { ...favoritos[index], active: false };
-                }
-              })
-              x.parentElement.removeChild(x);
-              
-            }
-          } else {
-            pop.setAttribute('src', favoriteActive);
-            let x = document.querySelector('.nenhum');
-            if (x != null) {
-              x.parentElement.removeChild(x);
-            }
-            favElement.innerHTML += /*html*/`
-                <span key=${filme}>
-                  <img class="favorite"src=${favoriteActive} />
-                  <img class="poster" src="${filme}"/>
-                </span>`
-
-            active = true;
-            favoritos.push({ active, poster: filme });
-          }
-          this.favoritos = favoritos;
-
-          renderFavo();
-          save();
-        });
+  eventListener() {
+    let filmes = document.querySelectorAll('.movies');
+    filmes.forEach(filme => {
+      filme.addEventListener('click', (filme) => {
+        this.onclick(filme);
       })
-
-    });
-
+    })
   }
   saveToStorage() {
     localStorage.setItem('filmes', JSON.stringify(this.favoritos));
@@ -215,7 +203,7 @@ class App {
         <div class="favorites">
           <h2>Favoritos</h2>
           <div class="movies">
-          ${this.renderFav()}
+          ${this.ready() || ''}
           </div>
         </div>
      </div>
