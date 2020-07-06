@@ -69,7 +69,9 @@ class App {
       }
       html += this.renderMovies(poster_path, favorito);
     })
-    return html;
+    let filmesEl = document.querySelector('.popular > .movies');
+    console.log(html);
+    filmesEl.innerHTML = html;
   }
 
 
@@ -86,6 +88,7 @@ class App {
   ready() {
     document.addEventListener('readystatechange', (event) => {
       if (document.readyState == 'complete') {
+        this.fetchData();
         this.renderFav();
       }
     })
@@ -141,7 +144,9 @@ class App {
     } else {
       favoritos[aux.indexOf(posterFilme)] = { active: !favoritos[aux.indexOf(posterFilme)].active, poster: posterFilme };
     }
+    console.log(filme);
     this.favoritos = favoritos;
+    this.fetchData();
     this.renderFav();
   }
 
@@ -197,7 +202,6 @@ class App {
         <div class="popular">
           <h2>Populares</h2>
           <div class="movies">
-          ${this.fetchData()}
           </div>
         </div>
         <div class="favorites">
