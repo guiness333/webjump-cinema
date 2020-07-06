@@ -8,7 +8,7 @@ import favoriteImg from './assets/favorite.svg';
 import favoriteActive from './assets/favorite-active.svg';
 class App {
   constructor() {
-    this.favoritos = [{}];
+    this.favoritos = JSON.parse(localStorage.getItem('filmes')) || [];
     this.movies = [
       {
         "popularity": 147.532,
@@ -48,126 +48,6 @@ class App {
         "vote_average": 8.5,
         "overview": "Toda a família de Ki-taek está desempregada, vivendo num porão sujo e apertado. Uma obra do acaso faz com que o filho adolescente da família comece a dar aulas de inglês à garota de uma família rica. Fascinados com a vida luxuosa destas pessoas, pai, mãe, filho e filha bolam um plano para se infiltrarem também na família burguesa, um a um. No entanto, os segredos e mentiras necessários à ascensão social custarão caro a todos.",
         "release_date": "2019-11-07"
-      },
-      {
-        "popularity": 94.28,
-        "vote_count": 8208,
-        "video": false,
-        "poster_path": "/igw938inb6Fy0YVcwIyxQ7Lu5FO.jpg",
-        "id": 496243,
-        "adult": false,
-        "backdrop_path": "/ApiBzeaa95TNYliSbQ8pJv4Fje7.jpg",
-        "original_language": "ko",
-        "original_title": "기생충",
-        "genre_ids": [
-          35,
-          18,
-          53
-        ],
-        "title": "Parasita",
-        "vote_average": 8.5,
-        "overview": "Toda a família de Ki-taek está desempregada, vivendo num porão sujo e apertado. Uma obra do acaso faz com que o filho adolescente da família comece a dar aulas de inglês à garota de uma família rica. Fascinados com a vida luxuosa destas pessoas, pai, mãe, filho e filha bolam um plano para se infiltrarem também na família burguesa, um a um. No entanto, os segredos e mentiras necessários à ascensão social custarão caro a todos.",
-        "release_date": "2019-11-07"
-      },
-      {
-        "popularity": 94.28,
-        "vote_count": 8208,
-        "video": false,
-        "poster_path": "/igw938inb6Fy0YVcwIyxQ7Lu5FO.jpg",
-        "id": 496243,
-        "adult": false,
-        "backdrop_path": "/ApiBzeaa95TNYliSbQ8pJv4Fje7.jpg",
-        "original_language": "ko",
-        "original_title": "기생충",
-        "genre_ids": [
-          35,
-          18,
-          53
-        ],
-        "title": "Parasita",
-        "vote_average": 8.5,
-        "overview": "Toda a família de Ki-taek está desempregada, vivendo num porão sujo e apertado. Uma obra do acaso faz com que o filho adolescente da família comece a dar aulas de inglês à garota de uma família rica. Fascinados com a vida luxuosa destas pessoas, pai, mãe, filho e filha bolam um plano para se infiltrarem também na família burguesa, um a um. No entanto, os segredos e mentiras necessários à ascensão social custarão caro a todos.",
-        "release_date": "2019-11-07"
-      },
-      {
-        "popularity": 94.28,
-        "vote_count": 8208,
-        "video": false,
-        "poster_path": "/igw938inb6Fy0YVcwIyxQ7Lu5FO.jpg",
-        "id": 496243,
-        "adult": false,
-        "backdrop_path": "/ApiBzeaa95TNYliSbQ8pJv4Fje7.jpg",
-        "original_language": "ko",
-        "original_title": "기생충",
-        "genre_ids": [
-          35,
-          18,
-          53
-        ],
-        "title": "Parasita",
-        "vote_average": 8.5,
-        "overview": "Toda a família de Ki-taek está desempregada, vivendo num porão sujo e apertado. Uma obra do acaso faz com que o filho adolescente da família comece a dar aulas de inglês à garota de uma família rica. Fascinados com a vida luxuosa destas pessoas, pai, mãe, filho e filha bolam um plano para se infiltrarem também na família burguesa, um a um. No entanto, os segredos e mentiras necessários à ascensão social custarão caro a todos.",
-        "release_date": "2019-11-07"
-      },
-      {
-        "popularity": 94.28,
-        "vote_count": 8208,
-        "video": false,
-        "poster_path": "/igw938inb6Fy0YVcwIyxQ7Lu5FO.jpg",
-        "id": 496243,
-        "adult": false,
-        "backdrop_path": "/ApiBzeaa95TNYliSbQ8pJv4Fje7.jpg",
-        "original_language": "ko",
-        "original_title": "기생충",
-        "genre_ids": [
-          35,
-          18,
-          53
-        ],
-        "title": "Parasita",
-        "vote_average": 8.5,
-        "overview": "Toda a família de Ki-taek está desempregada, vivendo num porão sujo e apertado. Uma obra do acaso faz com que o filho adolescente da família comece a dar aulas de inglês à garota de uma família rica. Fascinados com a vida luxuosa destas pessoas, pai, mãe, filho e filha bolam um plano para se infiltrarem também na família burguesa, um a um. No entanto, os segredos e mentiras necessários à ascensão social custarão caro a todos.",
-        "release_date": "2019-11-07"
-      },
-      {
-        "popularity": 94.28,
-        "vote_count": 8208,
-        "video": false,
-        "poster_path": "/igw938inb6Fy0YVcwIyxQ7Lu5FO.jpg",
-        "id": 496243,
-        "adult": false,
-        "backdrop_path": "/ApiBzeaa95TNYliSbQ8pJv4Fje7.jpg",
-        "original_language": "ko",
-        "original_title": "기생충",
-        "genre_ids": [
-          35,
-          18,
-          53
-        ],
-        "title": "Parasita",
-        "vote_average": 8.5,
-        "overview": "Toda a família de Ki-taek está desempregada, vivendo num porão sujo e apertado. Uma obra do acaso faz com que o filho adolescente da família comece a dar aulas de inglês à garota de uma família rica. Fascinados com a vida luxuosa destas pessoas, pai, mãe, filho e filha bolam um plano para se infiltrarem também na família burguesa, um a um. No entanto, os segredos e mentiras necessários à ascensão social custarão caro a todos.",
-        "release_date": "2019-11-07"
-      },
-      {
-        "popularity": 94.28,
-        "vote_count": 8208,
-        "video": false,
-        "poster_path": "/igw938inb6Fy0YVcwIyxQ7Lu5FO.jpg",
-        "id": 496243,
-        "adult": false,
-        "backdrop_path": "/ApiBzeaa95TNYliSbQ8pJv4Fje7.jpg",
-        "original_language": "ko",
-        "original_title": "기생충",
-        "genre_ids": [
-          35,
-          18,
-          53
-        ],
-        "title": "Parasita",
-        "vote_average": 8.5,
-        "overview": "Toda a família de Ki-taek está desempregada, vivendo num porão sujo e apertado. Uma obra do acaso faz com que o filho adolescente da família comece a dar aulas de inglês à garota de uma família rica. Fascinados com a vida luxuosa destas pessoas, pai, mãe, filho e filha bolam um plano para se infiltrarem também na família burguesa, um a um. No entanto, os segredos e mentiras necessários à ascensão social custarão caro a todos.",
-        "release_date": "2019-11-07"
       }]
     this.appElement = document.getElementById('app');
     this.appElement.innerHTML = this.render();
@@ -179,9 +59,11 @@ class App {
     this.movies.forEach(filme => {
       let { poster_path, backdrop_path, overview, title } = filme;
       let favorito = false
-      if (this.favoritos.includes({ title: title })) {
-        favorito = true;
-      }
+      this.favoritos.forEach(filme => {
+        if (filme.poster + "".includes(poster_path) && filme.active) {
+          favorito = true;
+        }
+      })
       html += this.renderMovies(poster_path, favorito);
     })
     return html;
@@ -190,9 +72,10 @@ class App {
 
 
   renderMovies(poster_path, favorito) {
+    console.log(favorito);
     return /*html*/`
           <span>
-          <img class="favorite"src=${favorito ? favoriteActive:favoriteImg} />
+          <img class="favorite"src=${favorito ? favoriteActive : favoriteImg} />
 
           <img class="poster" src="https://image.tmdb.org/t/p/w300/${poster_path}"/>
           </span>
@@ -200,35 +83,91 @@ class App {
   }
   renderFav() {
     let img = []
-    this.favoritos.forEach(favorito => 
-      {
-        img.push(favorito.poster)
+    let fav = this.favoritos;
+    document.addEventListener("DOMContentLoaded", function (event) {
+    let favElement = document.querySelector('.favorites > .movies');
+    if (fav.length > 0) {
+      fav.forEach(favorito => {
+        if(favorito.active){
+          img.push(favorito.poster);
+        }
       });
-    return img;
+      if (img.length > 0) {
+        console.log(img)
+        img.forEach(filme => {
+            favElement.innerHTML += /*html*/`
+            <span>
+              <img class="favorite"src=${favoriteActive} />
+              <img class="poster" src="${filme}"/>
+            </span>`
+        })}else{
+          console.log('oe')
+          favElement.innerHTML = /*html*/`
+          <h5 class='nenhum'>Nenhum filme adicionado aos favoritos</h5>`
+        }
+      
+    }else{
+      console.log('oe')
+      favElement.innerHTML = /*html*/`
+      <h5 class='nenhum'>Nenhum filme adicionado aos favoritos</h5>`
+    }
+    })
+    
   }
   eventListener() {
+    let favoritos = this.favoritos;
+    let active = false;
+    const save = () => this.saveToStorage();
+    const renderFavo = () => this.renderFav();
     document.addEventListener("DOMContentLoaded", function (event) {
       let movies = document.querySelectorAll(".poster");
       movies.forEach((filme, index) => {
         filme.addEventListener("click", (e) => {
           let filme = e.target.src;
           console.log(filme);
+
           let favElement = document.querySelector('.favorites > .movies');
-          favElement.innerHTML += /*html*/`
-                <span key=${index}>
+          let pop = document.querySelectorAll('.popular > .movies > span > img.favorite')[index];
+          if (pop.getAttribute('src') === favoriteActive) {
+            let x = document.querySelector(`span[key="${filme}"]`);
+            if (x != null) {
+              pop.setAttribute('src', favoriteImg)
+              favoritos.forEach((fil, index) => {
+                if (fil.poster == filme) {
+                  favoritos[index] = { ...favoritos[index], active: false };
+                }
+              })
+              x.parentElement.removeChild(x);
+              
+            }
+          } else {
+            pop.setAttribute('src', favoriteActive);
+            let x = document.querySelector('.nenhum');
+            if (x != null) {
+              x.parentElement.removeChild(x);
+            }
+            favElement.innerHTML += /*html*/`
+                <span key=${filme}>
                   <img class="favorite"src=${favoriteActive} />
                   <img class="poster" src="${filme}"/>
                 </span>`
-          let pop = document.querySelectorAll('.popular > .movies > span > img.favorite')[index];
-          pop.setAttribute('src', favoriteActive);
+
+            active = true;
+            favoritos.push({ active, poster: filme });
+          }
+          this.favoritos = favoritos;
+
+          renderFavo();
+          save();
         });
       })
-    });
-    
 
+    });
 
   }
-
+  saveToStorage() {
+    localStorage.setItem('filmes', JSON.stringify(this.favoritos));
+  }
 
 
   render() {
