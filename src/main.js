@@ -11,59 +11,43 @@ class App {
   constructor() {
     this.favoritos = JSON.parse(localStorage.getItem('filmes')) || [];
     this.setPopularData();
-    this.movies = [
-      {
-        "popularity": 147.532,
-        "vote_count": 3833,
-        "video": false,
-        "poster_path": "/wigZBAmNrIhxp2FNGOROUAeHvdh.jpg",
-        "id": 419704,
-        "adult": false,
-        "backdrop_path": "/t4z8OlOEzH7J1JRFUN3rcm6XHNL.jpg",
-        "original_language": "en",
-        "original_title": "Ad Astra",
-        "genre_ids": [
-          18,
-          878
-        ],
-        "title": "Ad Astra - Rumo às Estrelas",
-        "vote_average": 6.1,
-        "overview": "Roy McBride é um engenheiro espacial, portador de um leve grau de autismo, que decide empreender a maior jornada de sua vida: viajar para o espaço, cruzar a galáxia e tentar descobrir o que aconteceu com seu pai, um astronauta que se perdeu há vinte anos atrás no caminho para Netuno.",
-        "release_date": "2019-09-26"
-      },
-      {
-        "popularity": 94.28,
-        "vote_count": 8208,
-        "video": false,
-        "poster_path": "/igw938inb6Fy0YVcwIyxQ7Lu5FO.jpg",
-        "id": 496243,
-        "adult": false,
-        "backdrop_path": "/ApiBzeaa95TNYliSbQ8pJv4Fje7.jpg",
-        "original_language": "ko",
-        "original_title": "기생충",
-        "genre_ids": [
-          35,
-          18,
-          53
-        ],
-        "title": "Parasita",
-        "vote_average": 8.5,
-        "overview": "Toda a família de Ki-taek está desempregada, vivendo num porão sujo e apertado. Uma obra do acaso faz com que o filho adolescente da família comece a dar aulas de inglês à garota de uma família rica. Fascinados com a vida luxuosa destas pessoas, pai, mãe, filho e filha bolam um plano para se infiltrarem também na família burguesa, um a um. No entanto, os segredos e mentiras necessários à ascensão social custarão caro a todos.",
-        "release_date": "2019-11-07"
-      }]
+    this.setRecentData();
+    this.movies = [];
+    this.now_playing = [];
     this.appElement = document.getElementById('app');
     this.appElement.innerHTML = this.render();
 
     this.eventListener(true);
 
   }
-  async setPopularData(){
+  async setPopularData() {
     let data = await api.get(`/movie/popular?api_key=${API_KEY}&language=pt-BR&page=1&region=BR`);
-    console.log(data.data.results)
     this.movies = data.data.results;
+
+    let mainEl = document.querySelector('.main-movie');
+    mainEl.innerHTML = /*html*/`<img src="https://image.tmdb.org/t/p/w780/${this.movies[0].backdrop_path}"/>`
+    let secEl = document.querySelector('.secondary-movies');
+    secEl.innerHTML = /*html*/`
+    <img src="https://image.tmdb.org/t/p/w300/${this.movies[1].backdrop_path}"/>
+    <img src="https://image.tmdb.org/t/p/w300/${this.movies[2].backdrop_path}"/>`
+
+    mainEl.innerHTML += /*html*/`
+      <div class="info">
+        <h4>${this.movies[0].title}</h4>
+        <p>${this.movies[0].overview}</p>
+      </div>`
+
+
+
   }
+  async setRecentData() {
+    let data = await api.get(`/movie/now_playing?api_key=${API_KEY}&language=pt-BR&page=1&region=BR`);
+    this.now_playing = data.data.results;
+  }
+
   fetchData() {
     let html = '';
+    //Filmes populares
     this.movies.forEach(filme => {
       let { poster_path, backdrop_path, overview, title } = filme;
       let favorito = false
@@ -78,8 +62,28 @@ class App {
       html += this.renderMovies(poster_path, favorito);
     })
     let filmesEl = document.querySelector('.popular > .movies');
-    console.log(html);
     filmesEl.innerHTML = html;
+
+    //Filmes Recentes
+    html = '';
+    this.now_playing.forEach(filme => {
+      let { poster_path, backdrop_path, overview, title } = filme;
+      let favorito = false
+      let res = []
+      this.favoritos.forEach(filme => {
+        res.push(filme.poster);
+      })
+      let index = res.indexOf((`https://image.tmdb.org/t/p/w300/${poster_path}`));
+      if (res.indexOf((`https://image.tmdb.org/t/p/w300/${poster_path}`)) != -1 && this.favoritos[index].active) {
+        favorito = true;
+      }
+      html += this.renderMovies(poster_path, favorito);
+    })
+    let recentEl = document.querySelector('.recent > .movies');
+    console.log(recentEl);
+    recentEl.innerHTML = html;
+
+
   }
 
 
@@ -123,9 +127,9 @@ class App {
                 <img class="favorite" src=${favoriteActive} />
                 <img class="poster" src="${filme}"}/>
               </span>`
-          
+
         })
-        
+
 
       } else {
         favElement.innerHTML = /*html*/`
@@ -177,7 +181,6 @@ class App {
 
 
 
-
     const app = /*html*/`
     <div class="banner">
       <div class='container'>
@@ -197,19 +200,20 @@ class App {
         <div class="recent-container"> 
           <article class="main-movie">
             <div class="info">
-              <h4>${this.movies[1].title}</h4>
-              <p>${this.movies[1].overview}</p>
             </div>
-            <img src="https://image.tmdb.org/t/p/w780/${this.movies[1].backdrop_path}"/>
           </article>
           <article class="secondary-movies">
-            <img src="https://image.tmdb.org/t/p/w300/${this.movies[0].backdrop_path}"/>
-            <img src="https://image.tmdb.org/t/p/w300/${this.movies[0].backdrop_path}"/>
           </article>
         </div>
         <div class="popular">
           <h2>Populares</h2>
           <div class="movies">
+          </div>
+        </div>
+        <div class="recent">
+          <h2>Em exibição</h2>
+          <div class="movies">
+
           </div>
         </div>
         <div class="favorites">
@@ -218,6 +222,7 @@ class App {
           ${this.ready() || ''}
           </div>
         </div>
+        
      </div>
 
     `;
