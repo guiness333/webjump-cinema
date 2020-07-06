@@ -6,9 +6,11 @@ import searchImg from './assets/search.svg';
 import profileImg from './assets/profile.svg';
 import favoriteImg from './assets/favorite.svg';
 import favoriteActive from './assets/favorite-active.svg';
+const API_KEY = '4eb0f1abd8808fce853779d359d25c07';
 class App {
   constructor() {
     this.favoritos = JSON.parse(localStorage.getItem('filmes')) || [];
+    this.setPopularData();
     this.movies = [
       {
         "popularity": 147.532,
@@ -51,8 +53,14 @@ class App {
       }]
     this.appElement = document.getElementById('app');
     this.appElement.innerHTML = this.render();
+
     this.eventListener(true);
 
+  }
+  async setPopularData(){
+    let data = await api.get(`/movie/popular?api_key=${API_KEY}&language=pt-BR&page=1&region=BR`);
+    console.log(data.data.results)
+    this.movies = data.data.results;
   }
   fetchData() {
     let html = '';
