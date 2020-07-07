@@ -1,187 +1,234 @@
-import api from './api';
-import './styles.css';
-import notificationsImg from './assets/notification.svg';
-import logoImg from './assets/logo.svg';
-import searchImg from './assets/search.svg';
-import profileImg from './assets/profile.svg';
-import favoriteImg from './assets/favorite.svg';
-import favoriteActive from './assets/favorite-active.svg';
-const API_KEY = '4eb0f1abd8808fce853779d359d25c07';
+/* eslint-disable camelcase */
+import api, { API_KEY } from './api'
+import './styles.css'
+import notificationsImg from './assets/notification.svg'
+import logoImg from './assets/logo.svg'
+import searchImg from './assets/search.svg'
+import profileImg from './assets/profile.svg'
+import favoriteImg from './assets/favorite.svg'
+import favoriteActive from './assets/favorite-active.svg'
 class App {
-  constructor() {
-    this.favoritos = JSON.parse(localStorage.getItem('filmes')) || [];
-    this.setPopularData();
-    this.setRecentData();
-    this.movies = [];
-    this.now_playing = [];
-    this.appElement = document.getElementById('app');
-    this.appElement.innerHTML = this.render();
+  constructor () {
+    this.favoritos = JSON.parse(localStorage.getItem('filmes')) || []
+    this.setPopularData()
+    this.setRecentData()
+    this.movies = []
+    this.now_playing = []
+    this.appElement = document.getElementById('app')
+    this.appElement.innerHTML = this.render()
 
-    this.eventListener(true);
-
+    this.eventListener()
   }
-  async setPopularData() {
-    let data = await api.get(`/movie/popular?api_key=${API_KEY}&language=pt-BR&page=1&region=BR`);
-    this.movies = data.data.results;
 
-    let mainEl = document.querySelector('.main-movie');
-    mainEl.innerHTML = /*html*/`<img src="https://image.tmdb.org/t/p/w780/${this.movies[0].backdrop_path}"/>`
-    let secEl = document.querySelector('.secondary-movies');
-    secEl.innerHTML = /*html*/`
-    <img src="https://image.tmdb.org/t/p/w300/${this.movies[1].backdrop_path}"/>
-    <img src="https://image.tmdb.org/t/p/w300/${this.movies[2].backdrop_path}"/>`
+  async setPopularData () {
+    let data = []
+    try {
+      data = await api.get(
+      `/movie/popular?api_key=${API_KEY}&language=pt-BR&page=1&region=BR`
+      )
+    } catch (err) {
+      console.log('Error on request ', err)
+    }
+    this.movies = data.data.results || []
+  }
 
-    mainEl.innerHTML += /*html*/`
+  renderPopular (data) {
+    const mainEl = document.querySelector('.main-movie')
+    mainEl.innerHTML = /* html */ `<img src="https://image.tmdb.org/t/p/w780/${data[0].backdrop_path}"/>`
+    const secEl = document.querySelector('.secondary-movies')
+    secEl.innerHTML = /* html */ `
+    <img src="https://image.tmdb.org/t/p/w300/${data[1].backdrop_path}"/>
+    <img src="https://image.tmdb.org/t/p/w300/${data[2].backdrop_path}"/>`
+
+    mainEl.innerHTML += /* html */ `
       <div class="info">
-        <h4>${this.movies[0].title}</h4>
-        <p>${this.movies[0].overview}</p>
+        <h4>${data[0].title}</h4>
+        <p>${data[0].overview}</p>
       </div>`
-
-
-
-  }
-  async setRecentData() {
-    let data = await api.get(`/movie/now_playing?api_key=${API_KEY}&language=pt-BR&page=1&region=BR`);
-    this.now_playing = data.data.results;
   }
 
-  fetchData() {
-    let html = '';
-    //Filmes populares
-    this.movies.forEach(filme => {
-      let { poster_path, backdrop_path, overview, title } = filme;
+  async setRecentData () {
+    let data = []
+    try {
+      data = await api.get(
+        `/movie/now_playing?api_key=${API_KEY}&language=pt-BR&page=1&region=BR`
+      )
+    } catch (err) {
+      console.log('Error on request ', err)
+    }
+    this.now_playing = data.data.results || []
+  }
+
+  fetchData () {
+    let html = ''
+    // Filmes populares
+    this.movies.forEach((filme) => {
+      const { poster_path } = filme
       let favorito = false
-      let res = []
-      this.favoritos.forEach(filme => {
-        res.push(filme.poster);
+      const res = []
+      this.favoritos.forEach((filme) => {
+        res.push(filme.poster)
       })
-      let index = res.indexOf((`https://image.tmdb.org/t/p/w300/${poster_path}`));
-      if (res.indexOf((`https://image.tmdb.org/t/p/w300/${poster_path}`)) != -1 && this.favoritos[index].active) {
-        favorito = true;
+      const index = res.indexOf(
+        `https://image.tmdb.org/t/p/w300/${poster_path}`
+      )
+      if (
+        res.indexOf(`https://image.tmdb.org/t/p/w300/${poster_path}`) !== -1 &&
+        this.favoritos[index].active
+      ) {
+        favorito = true
       }
-      html += this.renderMovies(poster_path, favorito);
+      html += this.renderMovies(poster_path, favorito)
     })
-    let filmesEl = document.querySelector('.popular > .movies');
-    filmesEl.innerHTML = html;
+    const filmesEl = document.querySelector('.popular > .movies')
+    filmesEl.innerHTML = html
 
-    //Filmes Recentes
-    html = '';
-    this.now_playing.forEach(filme => {
-      let { poster_path, backdrop_path, overview, title } = filme;
-      let favorito = false
-      let res = []
-      this.favoritos.forEach(filme => {
-        res.push(filme.poster);
-      })
-      let index = res.indexOf((`https://image.tmdb.org/t/p/w300/${poster_path}`));
-      if (res.indexOf((`https://image.tmdb.org/t/p/w300/${poster_path}`)) != -1 && this.favoritos[index].active) {
-        favorito = true;
-      }
-      html += this.renderMovies(poster_path, favorito);
-    })
-    let recentEl = document.querySelector('.recent > .movies');
-    console.log(recentEl);
-    recentEl.innerHTML = html;
-
-
-  }
-
-
-
-  renderMovies(poster_path, favorito) {
-    return /*html*/`
-          <span key=${poster_path}>
-          <img class="favorite"src=${favorito ? favoriteActive : favoriteImg} />
-
-          <img class="poster" src="https://image.tmdb.org/t/p/w300/${poster_path}"/>
-          </span>
-          `
-  }
-  ready() {
-    document.addEventListener('readystatechange', (event) => {
-      if (document.readyState == 'complete') {
-        this.fetchData();
-        this.renderFav();
-      }
-    })
-  }
-
-  renderFav() {
-    let img = [];
-    console.log(this.favoritos);
-    let fav = this.favoritos;
-    let favElement = document.querySelector('.favorites > .movies');
-    if (fav.length > 0) {
-      fav.forEach(favorito => {
-        if (favorito.active) {
-          img.push(favorito.poster);
+    // Filmes Recentes
+    html = ''
+    this.now_playing.forEach((filme) => {
+      const { poster_path } = filme
+      if (poster_path !== null) {
+        let favorito = false
+        const res = []
+        this.favoritos.forEach((filme) => {
+          res.push(filme.poster)
+        })
+        const index = res.indexOf(
+        `https://image.tmdb.org/t/p/w300/${poster_path}`
+        )
+        if (
+          res.indexOf(`https://image.tmdb.org/t/p/w300/${poster_path}`) !== -1 &&
+        this.favoritos[index].active
+        ) {
+          favorito = true
         }
-      });
-      console.log(img);
-      if (img.length > 0) {
+        html += this.renderMovies(poster_path, favorito)
+      }
+    })
+    const recentEl = document.querySelector('.recent > .movies')
+    recentEl.innerHTML = html
+  }
 
-        favElement.innerHTML = '';
-        img.forEach(filme => {
-          favElement.innerHTML += /*html*/`
+  fetchData1 (data, query) {
+    let html = ''
+    data.forEach((filme) => {
+      const { poster_path } = filme
+      if (poster_path !== null) {
+        let favorito = false
+        const res = []
+        this.favoritos.forEach((filme) => {
+          res.push(filme.poster)
+        })
+        const index = res.indexOf(
+        `https://image.tmdb.org/t/p/w300/${poster_path}`
+        )
+        if (
+          res.indexOf(`https://image.tmdb.org/t/p/w300/${poster_path}`) !== -1 &&
+        this.favoritos[index].active
+        ) {
+          favorito = true
+        }
+        html += this.renderMovies(poster_path, favorito)
+      }
+    })
+    const elementAux = document.querySelector(query)
+    elementAux.innerHTML = html
+  }
+
+  renderMovies (poster_path, favorito) {
+    return /* html */ `
+        <span key=${poster_path}>
+        <img class="favorite"src=${favorito ? favoriteActive : favoriteImg} />
+        <img class="poster" src="https://image.tmdb.org/t/p/w300/${poster_path}"/>
+        </span>
+        `
+  }
+
+  ready () {
+    document.addEventListener('readystatechange', (event) => {
+      if (document.readyState === 'complete') {
+        // this.fetchData()
+        this.fetchData1(this.movies, '.popular > .movies')
+        this.fetchData1(this.now_playing, '.recent > .movies')
+        this.renderFav()
+        this.renderPopular(this.movies)
+      }
+    })
+  }
+
+  renderFav () {
+    const img = []
+    const fav = this.favoritos
+    const favElement = document.querySelector('.favorites > .movies')
+    if (fav.length > 0) {
+      fav.forEach((favorito) => {
+        if (favorito.active) {
+          img.push(favorito.poster)
+        }
+      })
+      if (img.length > 0) {
+        favElement.innerHTML = ''
+        img.forEach((filme) => {
+          favElement.innerHTML += /* html */ `
               <span key="${filme}">
                 <img class="favorite" src=${favoriteActive} />
                 <img class="poster" src="${filme}"}/>
               </span>`
-
         })
-
-
       } else {
-        favElement.innerHTML = /*html*/`
+        favElement.innerHTML = /* html */ `
             <h5 class='nenhum'>Nenhum filme adicionado aos favoritos</h5>`
       }
-
     } else {
-      favElement.innerHTML = /*html*/`
+      favElement.innerHTML = /* html */ `
             <h5 class='nenhum'>Nenhum filme adicionado aos favoritos</h5>`
     }
-    this.favoritos = fav;
-    this.saveToStorage();
+    this.favoritos = fav
+    this.saveToStorage()
   }
-  onclick(filme) {
-    let posterFilme = filme.target.src.includes('.svg') ? filme.srcElement.nextElementSibling.currentSrc : filme.target.src;
 
-    let favoritos = this.favoritos;
-    let aux = [];
-    favoritos.forEach(fav => {
-      aux.push(fav.poster);
+  onclick (filme) {
+    const posterFilme = filme.target.src.includes('.svg')
+      ? filme.srcElement.nextElementSibling.currentSrc
+      : filme.target.src
+
+    let favoritos = this.favoritos
+    const aux = []
+    favoritos.forEach((fav) => {
+      aux.push(fav.poster)
     })
-    if (!(aux.indexOf(posterFilme) != -1)) {
-      favoritos = [...favoritos, { active: true, poster: posterFilme }];
+    if (!(aux.indexOf(posterFilme) !== -1)) {
+      favoritos = [...favoritos, { active: true, poster: posterFilme }]
     } else {
-      favoritos[aux.indexOf(posterFilme)] = { active: !favoritos[aux.indexOf(posterFilme)].active, poster: posterFilme };
+      favoritos[aux.indexOf(posterFilme)] = {
+        active: !favoritos[aux.indexOf(posterFilme)].active,
+        poster: posterFilme
+      }
     }
-    console.log(filme);
-    this.favoritos = favoritos;
-    this.fetchData();
-    this.renderFav();
+    this.favoritos = favoritos
+    // this.fetchData()
+    this.fetchData1(this.movies, '.popular > .movies')
+    this.fetchData1(this.now_playing, '.recent > .movies')
+    this.renderFav()
   }
 
-  eventListener() {
-    let filmes = document.querySelectorAll('.movies');
-    filmes.forEach(filme => {
+  eventListener () {
+    const filmes = document.querySelectorAll('.movies')
+    filmes.forEach((filme) => {
       filme.addEventListener('click', (filme) => {
-        this.onclick(filme);
+        this.onclick(filme)
       })
     })
   }
-  saveToStorage() {
-    localStorage.setItem('filmes', JSON.stringify(this.favoritos));
+
+  saveToStorage () {
+    localStorage.setItem('filmes', JSON.stringify(this.favoritos))
   }
 
+  render () {
+    // this.popularMovies();
 
-  render() {
-
-    //this.popularMovies();
-
-
-
-    const app = /*html*/`
+    const app = /* html */ `
     <div class="banner">
       <div class='container'>
         <header>
@@ -225,10 +272,10 @@ class App {
         
      </div>
 
-    `;
+    `
 
-    return app;
+    return app
   }
 }
-const app = new App();
-
+// eslint-disable-next-line no-unused-vars
+const app = new App()
