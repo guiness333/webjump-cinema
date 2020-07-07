@@ -16,20 +16,8 @@ class App {
     this.now_playing = []
     this.appElement = document.getElementById('app')
     this.appElement.innerHTML = this.render()
-
+    this.ready()
     this.eventListener()
-  }
-
-  async setPopularData () {
-    let data = []
-    try {
-      data = await api.get(
-      `/movie/popular?api_key=${API_KEY}&language=pt-BR&page=1&region=BR`
-      )
-    } catch (err) {
-      console.log('Error on request ', err)
-    }
-    this.movies = data.data.results || []
   }
 
   renderPopular (data) {
@@ -47,69 +35,27 @@ class App {
       </div>`
   }
 
-  async setRecentData () {
+  async getData (category) {
     let data = []
     try {
       data = await api.get(
-        `/movie/now_playing?api_key=${API_KEY}&language=pt-BR&page=1&region=BR`
+        `/movie/${category}?api_key=${API_KEY}&language=pt-BR&page=1&region=BR`
       )
     } catch (err) {
       console.log('Error on request ', err)
     }
-    this.now_playing = data.data.results || []
+    return data.data.results || []
   }
 
-  fetchData () {
-    let html = ''
-    // Filmes populares
-    this.movies.forEach((filme) => {
-      const { poster_path } = filme
-      let favorito = false
-      const res = []
-      this.favoritos.forEach((filme) => {
-        res.push(filme.poster)
-      })
-      const index = res.indexOf(
-        `https://image.tmdb.org/t/p/w300/${poster_path}`
-      )
-      if (
-        res.indexOf(`https://image.tmdb.org/t/p/w300/${poster_path}`) !== -1 &&
-        this.favoritos[index].active
-      ) {
-        favorito = true
-      }
-      html += this.renderMovies(poster_path, favorito)
-    })
-    const filmesEl = document.querySelector('.popular > .movies')
-    filmesEl.innerHTML = html
-
-    // Filmes Recentes
-    html = ''
-    this.now_playing.forEach((filme) => {
-      const { poster_path } = filme
-      if (poster_path !== null) {
-        let favorito = false
-        const res = []
-        this.favoritos.forEach((filme) => {
-          res.push(filme.poster)
-        })
-        const index = res.indexOf(
-        `https://image.tmdb.org/t/p/w300/${poster_path}`
-        )
-        if (
-          res.indexOf(`https://image.tmdb.org/t/p/w300/${poster_path}`) !== -1 &&
-        this.favoritos[index].active
-        ) {
-          favorito = true
-        }
-        html += this.renderMovies(poster_path, favorito)
-      }
-    })
-    const recentEl = document.querySelector('.recent > .movies')
-    recentEl.innerHTML = html
+  async setRecentData () {
+    this.now_playing = await this.getData('now_playing')
   }
 
-  fetchData1 (data, query) {
+  async setPopularData () {
+    this.movies = await this.getData('popular')
+  }
+
+  fetchData (data, query) {
     let html = ''
     data.forEach((filme) => {
       const { poster_path } = filme
@@ -147,9 +93,8 @@ class App {
   ready () {
     document.addEventListener('readystatechange', (event) => {
       if (document.readyState === 'complete') {
-        // this.fetchData()
-        this.fetchData1(this.movies, '.popular > .movies')
-        this.fetchData1(this.now_playing, '.recent > .movies')
+        this.fetchData(this.movies, '.popular > .movies')
+        this.fetchData(this.now_playing, '.recent > .movies')
         this.renderFav()
         this.renderPopular(this.movies)
       }
@@ -206,9 +151,8 @@ class App {
       }
     }
     this.favoritos = favoritos
-    // this.fetchData()
-    this.fetchData1(this.movies, '.popular > .movies')
-    this.fetchData1(this.now_playing, '.recent > .movies')
+    this.fetchData(this.movies, '.popular > .movies')
+    this.fetchData(this.now_playing, '.recent > .movies')
     this.renderFav()
   }
 
@@ -226,8 +170,6 @@ class App {
   }
 
   render () {
-    // this.popularMovies();
-
     const app = /* html */ `
     <div class="banner">
       <div class='container'>
@@ -260,20 +202,17 @@ class App {
         <div class="recent">
           <h2>Em exibição</h2>
           <div class="movies">
-
           </div>
         </div>
         <div class="favorites">
           <h2>Favoritos</h2>
           <div class="movies">
-          ${this.ready() || ''}
           </div>
         </div>
         
      </div>
 
     `
-
     return app
   }
 }
