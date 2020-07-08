@@ -5,7 +5,7 @@ Site com listagem de filmes da api de  [The Movie DB](https://developers.themovi
 ## Objetivo 
 Construir um site com um design de acordo com o template desenvolvido no [Figma](https://www.figma.com/)*[2]* como mostra a *Figura 1*, conexão com a API [The Movie DB](https://developers.themoviedb.org)*[1]*, opção para adicionar filme aos favoritos e salvar no localStorage. Utilizando como ferramentas o [JavaScript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)*[3]* sem [frameworks](https://tableless.github.io/iniciantes/manual/js/o-que-framework.html)*[4]*, [HTML](https://developer.mozilla.org/pt-BR/docs/Web/HTML)*[5]* e [CSS](https://developer.mozilla.org/pt-BR/docs/Web/CSS)*[6]*
 
-![template](https://i.imgur.com/hYOqq0N.png)
+![template](https://i.imgur.com/hYOqq0N.png)  
 *Figura 1 - Template Figma*
 
 ## Desenvolvimento
