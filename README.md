@@ -27,7 +27,7 @@ A *Figura 3* demonstra a funcionalidade de adição aos favoritos.
 *Figura 3 - Funcionamento da opção de adicionar aos favoritos.*
 ## 5. Instalando e Executando
 ### 5.1 Introdução
-- Clone esse repositório:
+- Clone esse repositório:  
   `git clone git@github.com:guiness333/webjump-cinema.git`
 ### 5.2 Cinema (Frontend)
 - Acesse o diretório:  
