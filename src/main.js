@@ -124,7 +124,6 @@ class App {
     this.favoritos = favoritos;
     this.fetchData(this.movies, '.popular > .movies');
     this.fetchData(this.now_playing, '.recent > .movies');
-    this.fetchData(this.favoritos, '.favorites > .movies');
     this.renderFav();
   }
 
